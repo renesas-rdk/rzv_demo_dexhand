@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>rzv_demo_dexhand</name>
+  <version>0.0.1</version>
+  <description>Collection of launch files for RZ/V platform dexterous hand demo</description>
+  <maintainer email="baoan.du.xj@renesas.com">Baoan Du</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Vision and perception -->
+  <exec_depend>rzv_pose_estimation</exec_depend>
+  <exec_depend>v4l2_camera</exec_depend>
+  <exec_depend>foxglove_keypoint_publisher</exec_depend>
+
+  <!-- Hand control and visualization -->
+  <exec_depend>arm_hand_control</exec_depend>
+  <exec_depend>inspire_rh56_urdf</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <!-- Visualization bridge -->
+  <exec_depend>foxglove_bridge</exec_depend>
+
+  <!-- Launch infrastructure -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
