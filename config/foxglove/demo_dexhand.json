@@ -100,13 +100,13 @@
       },
       "cameraState": {
         "perspective": true,
-        "distance": 0.5516738087348138,
-        "phi": 64.21195250254544,
-        "thetaOffset": -124.93928298028382,
+        "distance": 0.6112729182656947,
+        "phi": 67.00987996368599,
+        "thetaOffset": -115.61285810981802,
         "targetOffset": [
-          -0.18099956050652066,
-          -0.14243740840216487,
-          2.5114541807278714e-18
+          -0.22206022007382517,
+          -0.11673366197324253,
+          2.1108441977601548e-19
         ],
         "target": [
           0,
@@ -126,7 +126,8 @@
       "followMode": "follow-none",
       "followTf": "left_hand/base",
       "scene": {
-        "meshUpAxis": "z_up"
+        "meshUpAxis": "z_up",
+        "backgroundColor": "#3d3d3d"
       },
       "transforms": {
         "frame:camera": {
@@ -261,18 +262,19 @@
     },
     "3D!2unqe1x": {
       "cameraState": {
-        "distance": 0.6434451771223733,
         "perspective": true,
-        "phi": 69.4404217121955,
+        "distance": 0.6434451771223559,
+        "phi": 69.44042171219552,
+        "thetaOffset": -75.02527551177705,
+        "targetOffset": [
+          -0.27094993845734305,
+          0.07396642342737975,
+          5.2858848569229365e-19
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.27499436283989104,
-          0.0810671496988899,
-          6.092813598267398e-19
         ],
         "targetOrientation": [
           0,
@@ -280,14 +282,14 @@
           0,
           1
         ],
-        "thetaOffset": -75.02527551177705,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
       },
       "followMode": "follow-pose",
       "scene": {
-        "meshUpAxis": "z_up"
+        "meshUpAxis": "z_up",
+        "backgroundColor": "#3d3d3d"
       },
       "transforms": {
         "frame:left_hand/base": {
