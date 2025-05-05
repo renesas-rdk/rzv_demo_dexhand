@@ -5,7 +5,7 @@ This package provides launch files and configurations for demonstrating dexterou
 ## Overview
 
 The RZ/V Demo DexHand package enables:
-- Hand gesture recognition and interpretation
+- Hand handmark estimation and interpretation
 - Simultaneous control of virtual and physical dexterous hands
 - Visualization through Foxglove Studio
 
@@ -18,52 +18,64 @@ The RZ/V Demo DexHand package enables:
 
 ### Hand Control and Visualization
 - `arm_hand_control`: Core control logic for the dexterous hand
-- `inspire_rh56_urdf`: URDF models for the Inspire RH56
+- `inspire_rh56_urdf`: URDF models for the Inspire RH56 dexterous hand
 - `robot_state_publisher`: Publishes TF information based on joint states
 - `tf2_ros`: Transform library for coordinate frames
 
 ### Visualization Bridge
 - `foxglove_bridge`: Bridges ROS 2 to Foxglove Studio for visualization
 
+## Installation and Setup
+
+### Dependencies Installation
+
+Before running the demos, ensure all required dependencies are installed:
+
+```bash
+# Install ROS 2 dependencies
+sudo apt update
+sudo apt install ros-$ROS_DISTRO-v4l2-camera ros-$ROS_DISTRO-robot-state-publisher ros-$ROS_DISTRO-tf2-ros
+
+# Clone and build all required packages in your workspace
+cd <your_ros2_ws>/src
+git clone <repository_url_for_arm_hand_control>
+git clone <repository_url_for_foxglove_keypoint_publisher>
+git clone <repository_url_for_inspire_rh56_urdf>
+git clone <repository_url_for_rzv_demo_dexhand>
+git clone <repository_url_for_rzv_model>
+git clone <repository_url_for_rzv_pose_estimation>
+
+# Build the workspace
+cd <your_ros2_ws>
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+### Setup Environment
+
+After building your workspace, you must source the setup script to make the packages visible to ROS:
+
+```bash
+source <your_ros2_ws>/install/setup.bash
+```
+
+It's recommended to add this line to your `~/.bashrc` file for automatic sourcing in new terminal sessions.
+
 ## Launch Files
 
-### gesture_to_physical_and_virtual_hands.launch.py
+### demo_virtual_hands.launch.py
 
-This launch file sets up a complete pipeline from hand gesture recognition to physical and virtual hand control:
-
-```
-PIPELINE:
-gesture command → hand interpreter → urdf visualization + real hand control
-
-TOPIC FLOW:
-- External source publishes: /hand_gesture
-- Hand interpreter subscribes to: /hand_gesture and publishes: /joint_states
-- URDF publishers use joint states to visualize both hands
-- Real hand controller uses joint states to control physical hand
-```
-
-Components included in this launch file:
-1. **Hand Gesture Interpreter**: Converts gesture commands to joint states
-2. **URDF State Publishers**: Visualize both right and left hands
-3. **Common Camera Reference Frame**: Places hands in a shared coordinate system
-4. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
-5. **Foxglove Bridge**: Enables visualization through Foxglove Studio
-
-### vision_to_physical_and_virtual_hands.launch.py
-
-This launch file sets up a vision-based hand tracking system that controls both virtual and physical hands:
+This launch file sets up a camera-based hand tracking system that controls virtual hands:
 
 ```
 PIPELINE:
-camera → hand landmark estimation → hand control → urdf visualization + real hand control
+camera → hand landmark estimation → hand landmark/gesture interpreters → urdf visualization
 
 TOPIC FLOW:
 - Camera publishes: /image_raw
 - Hand landmark estimation subscribes to: /image_raw and publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
 - Visualization nodes subscribe to landmarks/bbox and publish visualizations
-- Hand interpreter subscribes to: /hand_landmark_estimation/hand_landmarks and publishes: /joint_states
+- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks and publish: /joint_states
 - URDF publishers use joint states to visualize the hands
-- Real hand controller uses joint states to control physical hand
 ```
 
 Components included in this launch file:
@@ -71,31 +83,83 @@ Components included in this launch file:
 2. **Hand Landmark Estimation**: Detects hands and extracts landmark points
 3. **Visualization Nodes**: Create visual representations for Foxglove Studio
 4. **Hand Landmark Interpreter**: Converts detected landmarks to joint states
-5. **URDF State Publishers**: Visualize both right and left hands
-6. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
+5. **Hand Gesture Interpreter**: Alternative control method using gesture recognition
+6. **URDF State Publishers**: Visualize both right and left hands
 7. **Foxglove Bridge**: Enables visualization through Foxglove Studio
+
+### demo_physical_hand.launch.py
+
+This launch file extends the virtual hand demo to also control a physical dexterous hand:
+
+```
+PIPELINE:
+camera → hand landmark estimation → hand landmark/gesture interpreters → urdf visualization + real hand control
+
+TOPIC FLOW:
+- Camera publishes: /image_raw
+- Hand landmark estimation subscribes to: /image_raw and publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
+- Visualization nodes subscribe to landmarks/bbox and publish visualizations
+- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks and publish: /joint_states
+- URDF publishers use joint states to visualize the hands
+- Physical hand controller uses joint states to control the real DexHand
+```
+
+Components included in this launch file:
+1. **Camera Node**: Captures video input for hand tracking
+2. **Hand Landmark Estimation**: Detects hands and extracts landmark points
+3. **Visualization Nodes**: Create visual representations for Foxglove Studio
+4. **Hand Landmark Interpreter**: Converts detected landmarks to joint states
+5. **Hand Gesture Interpreter**: Alternative control method using gesture recognition
+6. **URDF State Publishers**: Visualize both right and left hands
+7. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
+8. **Foxglove Bridge**: Enables visualization through Foxglove Studio
 
 ## Usage
 
-To launch the gesture-based hand control demo:
+To launch the virtual hands demo:
 
 ```bash
-ros2 launch rzv_demo_dexhand gesture_to_physical_and_virtual_hands.launch.py
+ros2 launch rzv_demo_dexhand demo_virtual_hands.launch.py
 ```
 
-To launch the vision-based hand tracking and control demo:
+To launch the physical hand control demo:
 
 ```bash
-ros2 launch rzv_demo_dexhand vision_to_physical_and_virtual_hands.launch.py
+ros2 launch rzv_demo_dexhand demo_physical_hand.launch.py [video_device:=/dev/video0] [serial_port:=/dev/ttyUSB0]
 ```
+
+### Launch Arguments
+- `video_device`: Specify the camera device (default: `/dev/video0`)
+- `landmark_model_type`: Type of hand landmark model to use (default: `mediapipe_hand_landmark`, others: `rtmpose_hand`, `hrnetv2_hand_landmark`)
+- `serial_port`: Serial port for the physical DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
 
 ### Hardware Requirements
 - Renesas RZ/V platform
-- USB camera for gesture recognition
-- Inspire RH56 DexHand connected via serial port (default: /dev/ttyUSB0)
+- USB camera for hand tracking
+- Inspire RH56 DexHand connected via serial port (for physical hand demo)
 
-### Visualization
+### Visualization with Foxglove Studio
+
 The demo can be visualized using Foxglove Studio by connecting to the Foxglove Bridge websocket.
+
+#### Using the Preset Layout
+
+For the best visualization experience, a preset panel layout is provided:
+
+1. Start Foxglove Studio
+2. Connect to the Foxglove Bridge websocket (typically `ws://localhost:8765`)
+3. Click on "Layouts" in the top menu
+4. Select "Import layout from file"
+5. Navigate to the `config/foxglove/demo_dexhand.json` file in the rzv_demo_dexhand package
+6. Click "Open" to load the preset layout
+
+The preset layout provides:
+- Camera view with hand landmark overlays
+- 3D visualization of the virtual hands
+- Joint state monitoring panels
+- Custom panels configured specifically for the dexterous hand demo
+
+This layout ensures all the necessary visualization components are properly set up without manual configuration.
 
 ## License
 Apache License 2.0
