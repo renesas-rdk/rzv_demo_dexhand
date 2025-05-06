@@ -5,7 +5,7 @@ This package provides launch files and configurations for demonstrating dexterou
 ## Overview
 
 The RZ/V Demo DexHand package enables:
-- Hand handmark estimation and interpretation
+- Hand landmark estimation and interpretation
 - Simultaneous control of virtual and physical dexterous hands
 - Visualization through Foxglove Studio
 
@@ -27,15 +27,26 @@ The RZ/V Demo DexHand package enables:
 
 ## Installation and Setup
 
-### Dependencies Installation
+### ROS2 Jazzy Installation
+
+Before installing the package dependencies, ensure you have ROS 2 Jazzy installed on your Ubuntu system:
+
+```bash
+# Install ROS2 Jazzy base
+sudo apt update
+sudo apt install ros-jazzy-ros-base
+
+# Source ROS2 in the current shell
+source /opt/ros/jazzy/setup.bash
+```
+
+For detailed installation instructions, follow the [official ROS2 Jazzy installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html).
+
+### Demo Packages Installation
 
 Before running the demos, ensure all required dependencies are installed:
 
 ```bash
-# Install ROS 2 dependencies
-sudo apt update
-sudo apt install ros-$ROS_DISTRO-v4l2-camera ros-$ROS_DISTRO-robot-state-publisher ros-$ROS_DISTRO-tf2-ros
-
 # Clone and build all required packages in your workspace
 cd <your_ros2_ws>/src
 git clone <repository_url_for_arm_hand_control>
@@ -49,6 +60,43 @@ git clone <repository_url_for_rzv_pose_estimation>
 cd <your_ros2_ws>
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
+
+### RZV ROS2 Package Dependencies Installation
+
+Install the TVM TOOLCHAIN runtime library:
+
+```bash
+# Location in the RZV TVM: /drp-ai_tvm/obj/build_runtime/V2H/libtvm_runtime.so
+sudo cp libtvm_runtime.so /usr/lib/aarch64-linux-gnu/renesas
+```
+
+Use rosdep to install the remaining dependencies:
+
+```bash
+# Initialize and update rosdep
+sudo rosdep init
+rosdep update
+
+# Install dependencies using rosdep
+rosdep install \
+    --from-paths install/arm_hand_control \
+                 install/foxglove_keypoint_publisher \
+                 install/inspire_rh56_urdf \
+                 install/rzv_demo_dexhand \
+                 install/rzv_pose_estimation \
+    --ignore-src -r -y
+```
+
+### Serial Port Setup
+
+To access the physical DexHand through the serial port, the user needs permission to access `/dev/ttyUSB0`:
+
+```bash
+# Add your user to the dialout group to enable access to /dev/ttyUSB0
+sudo usermod -a -G dialout $USER
+```
+
+NOTE: You must log out and log back in to your user session for this change to take effect.
 
 ### Setup Environment
 
