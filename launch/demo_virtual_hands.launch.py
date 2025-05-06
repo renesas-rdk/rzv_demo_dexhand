@@ -76,7 +76,7 @@ def generate_launch_description():
             'landmark_model_type': landmark_model_type,
             'smoothing_enabled': True,
             'smoothing_factor': 0.6,
-            'bbox_expansion_scale': 1.2,  # W/A since the hand detection model is not perfect
+            'bbox_expansion_scale': 1.5,  # W/A since the hand detection model is not perfect
         }],
         remappings=[
             ('/image_raw', '/image_raw'),
