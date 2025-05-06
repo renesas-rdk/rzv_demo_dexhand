@@ -209,5 +209,11 @@ The preset layout provides:
 
 This layout ensures all the necessary visualization components are properly set up without manual configuration.
 
+#### Demo Visualization
+
+![Foxglove Studio Demo visualization for DexHand](doc/images/demo_dexhand.jpg)
+
+The image above shows the Foxglove Studio interface with the preset layout loaded, displaying the camera feed with hand landmark overlays and the 3D visualization of the virtual hands.
+
 ## License
 Apache License 2.0
