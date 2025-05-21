@@ -72,11 +72,12 @@ def generate_launch_description():
         executable='hand_landmark_estimation',
         name='hand_landmark_estimation',
         parameters=[{
-            'confidence_threshold': 0.7,
+            'confidence_threshold': 0.8,
             'landmark_model_type': landmark_model_type,
             'smoothing_enabled': True,
             'smoothing_factor': 0.6,
             'bbox_expansion_scale': 1.5,  # W/A since the hand detection model is not perfect
+            'bbox_size_threshold': 96,
         }],
         remappings=[
             ('/image_raw', '/image_raw'),
