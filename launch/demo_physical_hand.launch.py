@@ -85,7 +85,7 @@ def generate_launch_description():
             'smoothing_enabled': True,
             'smoothing_factor': 0.6,
             'bbox_expansion_scale': 1.5,  # W/A since the hand detection model is not perfect
-            'bbox_size_threshold': 96,
+            'bbox_size_threshold': 32,
         }],
         remappings=[
             ('/image_raw', '/image_raw'),
