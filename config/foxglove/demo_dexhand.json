@@ -95,23 +95,23 @@
           "parameter": "",
           "topic": "/left_hand/robot_description",
           "framePrefix": "left_hand/",
-          "order": 2
+          "order": 2,
+          "showOutlines": false
         }
       },
       "cameraState": {
-        "perspective": true,
         "distance": 0.6112729182656947,
+        "perspective": true,
         "phi": 67.00987996368599,
-        "thetaOffset": -115.61285810981802,
-        "targetOffset": [
-          -0.22206022007382517,
-          -0.11673366197324253,
-          2.1108441977601548e-19
-        ],
         "target": [
           0,
           0,
           0
+        ],
+        "targetOffset": [
+          -0.22206022007382517,
+          -0.11673366197324253,
+          2.1108441977601548e-19
         ],
         "targetOrientation": [
           0,
@@ -119,6 +119,7 @@
           0,
           1
         ],
+        "thetaOffset": -115.61285810981802,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
@@ -262,19 +263,18 @@
     },
     "3D!2unqe1x": {
       "cameraState": {
-        "perspective": true,
         "distance": 0.6434451771223559,
+        "perspective": true,
         "phi": 69.44042171219552,
-        "thetaOffset": -75.02527551177705,
-        "targetOffset": [
-          -0.27094993845734305,
-          0.07396642342737975,
-          5.2858848569229365e-19
-        ],
         "target": [
           0,
           0,
           0
+        ],
+        "targetOffset": [
+          -0.27094993845734305,
+          0.07396642342737975,
+          5.2858848569229365e-19
         ],
         "targetOrientation": [
           0,
@@ -282,6 +282,7 @@
           0,
           1
         ],
+        "thetaOffset": -75.02527551177705,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
@@ -449,7 +450,8 @@
           "parameter": "",
           "topic": "/right_hand/robot_description",
           "framePrefix": "right_hand/",
-          "order": 1
+          "order": 1,
+          "showOutlines": false
         }
       },
       "publish": {
