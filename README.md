@@ -8,8 +8,7 @@ The RZ/V Demo DexHand package enables:
 - Hand landmark estimation and interpretation
 - Simultaneous control of virtual and physical dexterous hands
 - Visualization through Foxglove Studio
-
-## Dependencies
+## Package Dependencies
 
 ### Vision and Perception
 - `rzv_pose_estimation`: Provides pose estimation capabilities on Renesas RZ/V platforms
@@ -25,25 +24,74 @@ The RZ/V Demo DexHand package enables:
 ### Visualization Bridge
 - `foxglove_bridge`: Bridges ROS 2 to Foxglove Studio for visualization
 
-## Installation and Setup
 
-### ROS2 Jazzy Installation
+## Prerequisites
+### Hardware Requirements:
+- [RZV2H-EVK Board](https://www.renesas.com/en/design-resources/boards-kits/rz-v2h-evk) - Renesas RZ/V platform
+- USB camera for hand tracking
+- Inspire RH56 DexHand connected via serial port (for physical hand demo)
+- Network access (Ethernet)
+- USB serial (optional for debugging)
+- SD Card (using eSD boot) at least 16GB recommended
+### Software requirements:
+- A host machine running:
+    - `Docker` – used for isolated and repeatable builds
+    - `Git` – to clone repositories
+    - `SSH` – for remote interaction and deployment to the target board
+- Cross-Compiling Scripts: A complete guide and supporting scripts for **Cross-Compiling ROS2 Projects for RZ/V2H Using Yocto SDK and Docker**.  
+- Prebuilt Yocto SDK for RZ/V2H with ROS 2 packages:  
+    - The prebuilt SDK (.sh installer) includes all the required ROS 2 packages for the Jazzy distribution, ready for cross-compilation.
+    - `poky-glibc-*.target.manifest`: A list of available target-side packages installed in the target root filesystem.
+- Ubuntu-based Root Filesystem Image
+- ROS 2 workspace source code
 
+## Quick Setup Guide
+### 1. Setup Environment
+Prepare the hardware and verify the connection between the RZ/V2H board and the host PC.
+
+- Power up the board using SD card 
+- Connect board to host via Ethernet
+- Ensure SSH access is working
+- Recommended: serial console for debugging
+
+Please refer to the file for further details: [Quick Setup Environment for RZ/V2H EVK Board](doc/setup_environment.md)
+### 2. Cross Compilation
+Cross-compile the ROS 2 application using the provided script.
+- Clone project repositories to your host machine
+- Prepare the ROS 2 workspace layout
+- Run the provided build script to:
+  - Creating docker 
+  - Install the Yocto SDK environment
+  - Cross build the application
+- Deploy the build output to the target via SSH
+
+The final binaries will be located in `~/ros2_ws/install/` on the board
+
+Please refer to the file for further details: [Cross Compiling for The Dexhand Demo](doc/cross_compiling.md)
+
+
+## Installation the DexHand demo
+
+This section explains how to install the ROS 2 workspace and the DexHand demo on the RZ/V2H EVK board.
+- Ensure the target board has successfully booted into the Ubuntu-based OS from microSD
+- Your development machine can establish an SSH connection to the target board.
+- The `install/` directory (from cross-compilation) has been deployed to the board, typically under `/home/rzpi/ros2_ws/install` 
+
+
+**Note:**
+> On the provided pure Ubuntu image for the RZ/V2H board, `ros-jazzy-ros-base` has already been installed  
+> Additionally, the demo packages were built during the [cross compilation process](#2-cross-compilation).   
+> So, you can skip these steps [(1)](#1-ros2-jazzy-installation) [(2)](#2-demo-packages-installation), and proceed to step [(3)](#3-rzv-ros2-package-dependencies-installation).
+### 1. ROS2 Jazzy Installation
 Before installing the package dependencies, ensure you have ROS 2 Jazzy installed on your Ubuntu system:
 
 ```bash
-# Install ROS2 Jazzy base
+# Update package index and install ROS 2 Jazzy base
 sudo apt update
 sudo apt install ros-jazzy-ros-base
-
-# Source ROS2 in the current shell
-source /opt/ros/jazzy/setup.bash
 ```
-
 For detailed installation instructions, follow the [official ROS2 Jazzy installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html).
-
-### Demo Packages Installation
-
+### 2. Demo Packages Installation
 Before running the demos, ensure all required dependencies are installed:
 
 ```bash
@@ -61,23 +109,25 @@ cd <your_ros2_ws>
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
 
-### RZV ROS2 Package Dependencies Installation
+### 3. RZV ROS2 Package Dependencies Installation
 
-Install the TVM TOOLCHAIN runtime library:
-
+Download the `libtvm_runtime.so` file from the official repository:   
+[libtvm_runtime.so – GitHub (Renesas RZ TVM v2.5.0)](https://github.com/renesas-rz/rzv_drp-ai_tvm/tree/v2.5.0/obj/build_runtime/V2H)
 ```bash
-# Location in the RZV TVM: /drp-ai_tvm/obj/build_runtime/V2H/libtvm_runtime.so
+wget https://github.com/renesas-rz/rzv_drp-ai_tvm/blob/v2.5.0/obj/build_runtime/V2H/libtvm_runtime.so
+```
+Install the TVM TOOLCHAIN runtime library:
+```bash
 sudo cp libtvm_runtime.so /usr/lib/aarch64-linux-gnu/renesas
 ```
-
-Use rosdep to install the remaining dependencies:
-
+### 4. Install Package Dependencies
+Use `rosdep` to install all required dependencies:
 ```bash
-# Initialize and update rosdep
+# Initialize and update rosdep (only required once per system)
 sudo rosdep init
 rosdep update
 
-# Install dependencies using rosdep
+#Install dependencies for the following packages
 rosdep install \
     --from-paths install/arm_hand_control \
                  install/foxglove_keypoint_publisher \
@@ -86,31 +136,54 @@ rosdep install \
                  install/rzv_pose_estimation \
     --ignore-src -r -y
 ```
+### 5. Load the workspace
+You must source the setup script to make the packages visible to ROS:
+```bash
+# Source ROS2 in the current shell
+source /opt/ros/jazzy/setup.bash
 
-### Serial Port Setup
+source <your_ros2_ws>/install/setup.bash
+```
 
+
+## Run the DexHand demo
+### Connection Hardware
+Connect both the USB camera and the physical DexHand to the USB ports on the board.  
 To access the physical DexHand through the serial port, the user needs permission to access `/dev/ttyUSB0`:
 
 ```bash
 # Add your user to the dialout group to enable access to /dev/ttyUSB0
 sudo usermod -a -G dialout $USER
 ```
+**Note:**
+> For RZ/V2H EVK, there are USB 2.0 and USB 3.0 ports.  
+> USB camera needs to be connected to appropriate port based on its requirement.
 
-NOTE: You must log out and log back in to your user session for this change to take effect.
+### Run the Demo
 
-### Setup Environment
-
-After building your workspace, you must source the setup script to make the packages visible to ROS:
+To launch the virtual hands demo:
 
 ```bash
-source <your_ros2_ws>/install/setup.bash
+ros2 launch rzv_demo_dexhand demo_virtual_hands.launch.py
 ```
 
-It's recommended to add this line to your `~/.bashrc` file for automatic sourcing in new terminal sessions.
+To launch the physical hand control demo:
+
+```bash
+ros2 launch rzv_demo_dexhand demo_physical_hand.launch.py [video_device:=/dev/video0] [serial_port:=/dev/ttyUSB0]
+```
+
+### Launch Arguments
+- `video_device`: Specify the camera device (default: `/dev/video0`)
+- `landmark_model_type`: Type of hand landmark model to use (default: `mediapipe_hand_landmark`, others: `rtmpose_hand`, `hrnetv2_hand_landmark`)
+- `serial_port`: Serial port for the physical DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
+
+
+
 
 ## Launch Files
 
-### demo_virtual_hands.launch.py
+#### demo_virtual_hands.launch.py
 
 This launch file sets up a camera-based hand tracking system that controls virtual hands:
 
@@ -135,7 +208,7 @@ Components included in this launch file:
 6. **URDF State Publishers**: Visualize both right and left hands
 7. **Foxglove Bridge**: Enables visualization through Foxglove Studio
 
-### demo_physical_hand.launch.py
+#### demo_physical_hand.launch.py
 
 This launch file extends the virtual hand demo to also control a physical dexterous hand:
 
@@ -162,31 +235,8 @@ Components included in this launch file:
 7. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
 8. **Foxglove Bridge**: Enables visualization through Foxglove Studio
 
-## Usage
 
-To launch the virtual hands demo:
-
-```bash
-ros2 launch rzv_demo_dexhand demo_virtual_hands.launch.py
-```
-
-To launch the physical hand control demo:
-
-```bash
-ros2 launch rzv_demo_dexhand demo_physical_hand.launch.py [video_device:=/dev/video0] [serial_port:=/dev/ttyUSB0]
-```
-
-### Launch Arguments
-- `video_device`: Specify the camera device (default: `/dev/video0`)
-- `landmark_model_type`: Type of hand landmark model to use (default: `mediapipe_hand_landmark`, others: `rtmpose_hand`, `hrnetv2_hand_landmark`)
-- `serial_port`: Serial port for the physical DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
-
-### Hardware Requirements
-- Renesas RZ/V platform
-- USB camera for hand tracking
-- Inspire RH56 DexHand connected via serial port (for physical hand demo)
-
-### Visualization with Foxglove Studio
+## Visualization with Foxglove Studio
 
 The demo can be visualized using Foxglove Studio by connecting to the Foxglove Bridge websocket.
 
