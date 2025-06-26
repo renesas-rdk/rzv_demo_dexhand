@@ -36,13 +36,13 @@ def generate_launch_description():
     - Real hand controller uses joint states to control physical hand
     """
     # Define package directories
-    arm_control_pkg_dir = get_package_share_directory('arm_hand_control')
     inspire_pkg_dir = get_package_share_directory('inspire_rh56_urdf')
+    inspire_rh56_config_pkg_dir = get_package_share_directory('inspire_rh56_dexhand')
 
     # 1. Hand gesture interpreter
     # SUBSCRIBES: /hand_gesture
     # PUBLISHES: /joint_states
-    hand_config_path = os.path.join(arm_control_pkg_dir, 'config/hand/inspire_rh56.yaml')
+    hand_config_path = os.path.join(inspire_rh56_config_pkg_dir, 'config/inspire_rh56.yaml')
     hand_interpreter_node = Node(
         package='arm_hand_control',
         executable='hand_gesture_interpreter',
@@ -115,9 +115,9 @@ def generate_launch_description():
     # 4. Real hand control - Inspire RH56 DexHand
     # SUBSCRIBES: /joint_states (implicitly through the node)
     # CONTROLS: Physical Inspire RH56 hand connected via serial
-    default_config_file = os.path.join(arm_control_pkg_dir, 'config/hand/inspire_rh56.yaml')
+    default_config_file = os.path.join(inspire_rh56_config_pkg_dir, 'config/inspire_rh56.yaml')
     inspire_rh56_node = Node(
-        package='arm_hand_control',
+        package='inspire_rh56_dexhand',
         executable='inspire_rh56_dexhand',
         name='inspire_rh56_dexhand_node',
         parameters=[
