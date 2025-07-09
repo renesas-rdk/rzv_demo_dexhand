@@ -24,34 +24,30 @@ Use the provided cross-compilation environment & prebuilt SDK installer file to 
     git clone <repository_url_for_arm_hand_control>
     git clone <repository_url_for_foxglove_keypoint_publisher>
     git clone <repository_url_for_inspire_rh56_urdf>
+    git clone <repository_url_for_ruiyan_rh2_controller>
+    git clone <repository_url_for_ruiyan_rh2_urdf>
+    git clone <repository_url_for_ruiyan_rh2_dexhand>
     git clone <repository_url_for_rzv_demo_dexhand>
     git clone <repository_url_for_rzv_model>
     git clone <repository_url_for_rzv_pose_estimation>
     ```
 **Note:**
->Both <rzv_model> and <inspire_rh56_urdf> repositories include large binary assets managed by Git LFS (Large File Storage). When cloning these repositories, Git retrieves only lightweight pointer files instead of the actual content.
-- *To download the actual contents of these large files, run the following commands after cloning*
-    ```bash
-    cd <your_X_compilation_ws>/Dexhand/ros2_ws/rzv_model/ 
-    git lfs pull
-
-    cd <your_X_compilation_ws>/Dexhand/ros2_ws/inspire_rh56_urdf/
-    git lfs pull 
-    ```
-    This ensures that all required binary assets are properly fetched and ready for use.
-
-
+> Please install git-lfs as some repositories use LFS to store large files.
 
 You should see the following structure:
 
 ```
-<your_workspace>/   
+<your_workspace>/
 └── <your_X_compilation_ws>/
     ├──Dexhand/
     │    ├── ros2_ws/
     │    │   ├── arm_hand_control/
     │    │   ├── foxglove_keypoint_publisher/
     │    │   ├── inspire_rh56_urdf/
+    │    │   ├── inspire_rh56_dexhand/
+    │    │   ├── ruiyan_rh2_controller/
+    │    │   ├── ruiyan_rh2_urdf/
+    │    │   ├── ruiyan_rh2_dexhand/
     │    │   ├── rzv_demo_dexhand/
     │    │   ├── rzv_model/
     │    │   └── rzv_pose_estimation/
@@ -71,7 +67,7 @@ You should see the following structure:
     ```bash
     docker exec -it [name_of_docker_container] /bin/bash
     ```
-## Start Compilation 
+## Start Compilation
 
 Inside the container, navigate to your ROS 2 workspace:
 ```bash
@@ -97,9 +93,13 @@ ros2_ws
 │   ├── setup.bash
 │   └── ...
 ├── log
-├── arm_hand_control/                 
+├── arm_hand_control/
 ├── foxglove_keypoint_publisher/
 ├── inspire_rh56_urdf/
+├── inspire_rh56_dexhand/
+├── ruiyan_rh2_controller/
+├── ruiyan_rh2_urdf/
+├── ruiyan_rh2_dexhand/
 ├── rzv_demo_dexhand/
 ├── rzv_model/
 ├── rzv_pose_estimation/
@@ -114,15 +114,15 @@ ros2_ws
 ```
 
 **Note:**
->Please read repository's `Readme` and `poky-glibc-*.target.manifest` carefully.  
+>Please read repository's `Readme` and `poky-glibc-*.target.manifest` carefully.
 It contains detailed instructions and a list of supported ROS 2 packages, as well as the exact steps required to set up and run the cross-compilation process successfully.
-## Deployment to target 
+## Deployment to target
 Deploy the Built Application to RZ/V2H Board
    ```bash
    # Create the destination directory on the target board
    ssh rzpi@192.168.1.10 "mkdir -p /home/rzpi/ros2_ws"
-   
+
    # Copy the built ROS 2 application to the board via SCP
    scp -r install/ rzpi@192.168.1.10:/home/rzpi/ros2_ws/
    ```
-The built workspace (install/) will be transferred to the board at /home/rzpi/ros2_ws/install 
+The built workspace (install/) will be transferred to the board at /home/rzpi/ros2_ws/install
