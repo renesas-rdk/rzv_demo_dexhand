@@ -20,4 +20,11 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
+# Install setup files
+install(PROGRAMS
+  setup/ruiyan_rh2_init.sh
+  setup/inspire_rh56_init.sh
+  DESTINATION share/${PROJECT_NAME}/setup
+)
+
 ament_package()
