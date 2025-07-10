@@ -183,6 +183,18 @@ sudo usermod -a -G dialout $USER
 > For RZ/V2H EVK, there are USB 2.0 and USB 3.0 ports.
 > USB camera needs to be connected to appropriate port based on its requirement.
 
+### Setup Hardware
+
+Based on the hardware currently in use — **Inspire RH56** or **Ruiyan RH2** — please run the following script to load the required kernel module or initialize hardware communication:
+
+- **Inspire RH56**:
+  `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/inspire_rh56_init.sh`
+
+- **Ruiyan RH2**:
+  `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/ruiyan_rh2_init.sh`
+
+If you are using different hardware, please create your own setup script accordingly.
+
 ### Run the Demo
 
 To launch the virtual hands demo:
