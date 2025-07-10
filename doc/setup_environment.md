@@ -1,5 +1,5 @@
 #  Environment Setup Guide
-This quick start guide focuses on booting the board using a **microSD card**, which is the most straightforward method.  
+This quick start guide focuses on booting the board using a **microSD card**, which is the most straightforward method.
 Other advanced boot methods such as **xSPI flash** or **TFTP + NFS boot** are also supported, but not covered in detail here.
 
 > For information on advanced boot options, please refer to the official documentation in the [Reference](#reference) section below.
@@ -7,8 +7,8 @@ Other advanced boot methods such as **xSPI flash** or **TFTP + NFS boot** are al
 To boot the RZ/V2H board using a microSD card, you must first flash a bootable Linux image onto it.
 
 ### Requirements
-- Flash script: Provided script to flash image 
-- Balena Etcher: GUI-based tool to flash image 
+- Flash script: Provided script to flash image
+- Balena Etcher: GUI-based tool to flash image
 - A microSD card (at least **16 GB** recommended)
 - Two provided bootable Linux images
     |File name                              | Using                     |Platform support   |
@@ -28,10 +28,10 @@ sda 8:0 0 30.9G 0 disk
 ├─sda1 8:1 0 512M 0 part /boot/efi
 ├─sda2 8:2 0 1K 0 part
 └─sda5 8:5 0 30.3G 0 part /
-sdb 8:16 1 29.7G 0 disk         <-- This is your SD card 
+sdb 8:16 1 29.7G 0 disk         <-- This is your SD card
 ```
 In this case, the following are your microSD card components:
-- `/dev/sdb`: The device name for the entire microSD card.  
+- `/dev/sdb`: The device name for the entire microSD card.
 #### Run the Flash Script
 Use the flash script to write the OS image to the SD card:
 
@@ -46,19 +46,19 @@ Expected successful output:
 SD card prepared successfully for eSD boot
 ```
 ### Option 2: Flash Using Balena Etcher (Windows/macOS/Linux)
-Balena Etcher is a user-friendly GUI tool to flash OS images to SD cards and USB drives.  
-It provides a simple and safe method, especially for beginners.  
+Balena Etcher is a user-friendly GUI tool to flash OS images to SD cards and USB drives.
+It provides a simple and safe method, especially for beginners.
 
 #### Install Balena Etcher
 Download and install the software from the [Balena Etcher Official Website](https://etcher.balena.io/)
 #### Flashing the Image
-Once Etcher is open:  
+Once Etcher is open:
 ![Balena Etcher Application](images/balenaetcher-eye.jpg)
 - **Select Image:** Click "Flash from file" and choose your image file (e.g., renesas-ubuntu-rzv2h-evk.zip)
 - **Select Target:**
     Insert your SD card and choose the correct device (e.g., /dev/sdb).
-    > If using this software on Linux platform. Please confirm the name of device of SD card carefully.  
-    > Double-check to avoid overwriting your main disk  
+    > If using this software on Linux platform. Please confirm the name of device of SD card carefully.
+    > Double-check to avoid overwriting your main disk
 - **Flashing:**
     Click "Flash" to begin. Etcher will:
 
@@ -88,21 +88,21 @@ The board supports multiple boot options, including:
 2. Change DSW1 and DSW2 setting as shown in the figure
 3. Connect peripherals devices
 4. Connect an HDMI monitor (optional)
-5. Connect the power supply  
+5. Connect the power supply
 
 Turn on power switches:
 
-6.  Flip **SW3** to `ON` (main power) 
+6.  Flip **SW3** to `ON` (main power)
 7.  Flip **SW2** to `ON` (power-on signal)
 8. Connect the Ethernet Port2
 (The default IP address is 192.168.1.10)
 
 The board will begin booting.
-> Make sure the switches are toggled in the correct direction according to the silkscreen on the board. 
+> Make sure the switches are toggled in the correct direction according to the silkscreen on the board.
 ---
 ### Verifying System Boot and SSH Access
 
-After powering on the board, connect via serial console and check the boot log to verify that it has successfully booted into the Ubuntu system.  
+After powering on the board, connect via serial console and check the boot log to verify that it has successfully booted into the Ubuntu system.
 Alternatively, if the board is reachable over the network, you can confirm it is running by connecting via SSH.
 
 **Network Connectivity**
