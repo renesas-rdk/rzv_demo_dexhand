@@ -131,6 +131,7 @@ wget https://github.com/renesas-rz/rzv_drp-ai_tvm/raw/refs/heads/v2.5.0/obj/buil
 Install the TVM TOOLCHAIN runtime library:
 ```bash
 sudo mv libtvm_runtime.so /usr/lib/aarch64-linux-gnu/renesas
+sudo ldconfig
 ```
 ### 4. Install Package Dependencies
 Use `rosdep` to install all required dependencies:
@@ -155,7 +156,9 @@ rosdep install \
 
 #Install dependencies for the RuiYan RH2 Dexhand demo
 rosdep install \
-    --from-paths install/ruiyan_rh2_controller \
+    --from-paths install/rh6_ctrl \
+                 install/rh6_msg \
+                 install/rh6_cmd \
                  install/ruiyan_rh2_urdf \
                  install/ruiyan_rh2_dexhand \
     --ignore-src -r -y
@@ -171,21 +174,10 @@ source <your_ros2_ws>/install/setup.bash
 ```
 
 ## Run the DexHand demo
-### Connection Hardware
+### Connect and setup hardware
 Connect both the USB camera and the physical DexHand to the USB ports on the board.
-To access the physical DexHand through the serial port, the user needs permission to access `/dev/ttyUSB0`:
 
-```bash
-# Add your user to the dialout group to enable access to /dev/ttyUSB0
-sudo usermod -a -G dialout $USER
-```
-**Note:**
-> For RZ/V2H EVK, there are USB 2.0 and USB 3.0 ports.
-> USB camera needs to be connected to appropriate port based on its requirement.
-
-### Setup Hardware
-
-Based on the hardware currently in use — **Inspire RH56** or **Ruiyan RH2** — please run the following script to load the required kernel module or initialize hardware communication:
+Based on the hardware currently in use: **Inspire RH56** or **Ruiyan RH2**, please run the following script to load the required kernel module or initialize hardware communication:
 
 - **Inspire RH56**:
   `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/inspire_rh56_init.sh`
@@ -193,7 +185,13 @@ Based on the hardware currently in use — **Inspire RH56** or **Ruiyan RH2** �
 - **Ruiyan RH2**:
   `install/rzv_demo_dexhand/share/rzv_demo_dexhand/setup/ruiyan_rh2_init.sh`
 
+You only need to run this script once when you connect the hardware to the board.
+
 If you are using different hardware, please create your own setup script accordingly.
+
+**Note:**
+> For RZ/V2H EVK, there are USB 2.0 and USB 3.0 ports.
+> USB camera needs to be connected to appropriate port based on its requirement.
 
 ### Run the Demo
 
