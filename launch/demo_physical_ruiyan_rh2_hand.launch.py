@@ -234,7 +234,8 @@ def generate_launch_description():
         parameters=[{
             'config_file': default_config_file,
             'hand_type': 1,
-            'command_threshold': 0.05
+            'command_threshold': 0.05,
+            'run_speed': 2000
         }],
         output='screen'
     )
