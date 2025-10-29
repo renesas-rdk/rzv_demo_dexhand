@@ -27,7 +27,11 @@
         "far": 5000
       },
       "followMode": "follow-pose",
-      "scene": {},
+      "scene": {
+        "transforms": {
+          "visible": true
+        }
+      },
       "transforms": {},
       "topics": {},
       "layers": {},
@@ -50,6 +54,9 @@
             "visible": false
           },
           "/landmarks_visualization": {
+            "visible": true
+          },
+          "/bbox_visualization": {
             "visible": true
           }
         }
@@ -100,18 +107,19 @@
         }
       },
       "cameraState": {
-        "distance": 0.6112729182656947,
         "perspective": true,
-        "phi": 67.00987996368599,
+        "distance": 0.7504827842213454,
+        "phi": 74.6442075128805,
+        "thetaOffset": -75.25313954024135,
+        "targetOffset": [
+          -0.4148612549132039,
+          0.11332492531135921,
+          2.110844197760155e-19
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.22206022007382517,
-          -0.11673366197324253,
-          2.1108441977601548e-19
         ],
         "targetOrientation": [
           0,
@@ -119,7 +127,6 @@
           0,
           1
         ],
-        "thetaOffset": -115.61285810981802,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
@@ -128,7 +135,10 @@
       "followTf": "left_hand/base",
       "scene": {
         "meshUpAxis": "z_up",
-        "backgroundColor": "#3d3d3d"
+        "backgroundColor": "#3d3d3d",
+        "transforms": {
+          "visible": false
+        }
       },
       "transforms": {
         "frame:camera": {
@@ -247,9 +257,85 @@
         },
         "frame:left_hand/thumb_tip": {
           "visible": false
+        },
+        "frame:left_hand/base_link": {
+          "visible": false
+        },
+        "frame:left_hand/fz11_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz12_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz13_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz21_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz22_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz31_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz32_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz41_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz42_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz51_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz52_Link": {
+          "visible": false
+        },
+        "frame:right_hand/base_link": {
+          "visible": false
+        },
+        "frame:right_hand/fy11_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy12_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy13_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy21_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy22_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy31_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy32_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy41_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy42_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy51_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy52_Link": {
+          "visible": false
         }
       },
-      "topics": {},
+      "topics": {
+        "/camera_info": {
+          "visible": false
+        }
+      },
       "publish": {
         "type": "point",
         "poseTopic": "/move_base_simple/goal",
@@ -263,18 +349,19 @@
     },
     "3D!2unqe1x": {
       "cameraState": {
-        "distance": 0.6434451771223559,
         "perspective": true,
-        "phi": 69.44042171219552,
+        "distance": 0.6434451771223548,
+        "phi": 69.44042171219554,
+        "thetaOffset": -75.02527551177708,
+        "targetOffset": [
+          -0.2762641439906745,
+          0.07192080548965023,
+          -2.267154101720069e-19
+        ],
         "target": [
           0,
           0,
           0
-        ],
-        "targetOffset": [
-          -0.27094993845734305,
-          0.07396642342737975,
-          5.2858848569229365e-19
         ],
         "targetOrientation": [
           0,
@@ -282,7 +369,6 @@
           0,
           1
         ],
-        "thetaOffset": -75.02527551177705,
         "fovy": 45,
         "near": 0.1,
         "far": 5000
@@ -290,7 +376,10 @@
       "followMode": "follow-pose",
       "scene": {
         "meshUpAxis": "z_up",
-        "backgroundColor": "#3d3d3d"
+        "backgroundColor": "#3d3d3d",
+        "transforms": {
+          "visible": false
+        }
       },
       "transforms": {
         "frame:left_hand/base": {
@@ -408,6 +497,78 @@
           "visible": false
         },
         "frame:camera": {
+          "visible": false
+        },
+        "frame:left_hand/base_link": {
+          "visible": false
+        },
+        "frame:left_hand/fz11_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz12_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz13_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz21_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz22_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz31_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz32_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz41_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz42_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz51_Link": {
+          "visible": false
+        },
+        "frame:left_hand/fz52_Link": {
+          "visible": false
+        },
+        "frame:right_hand/base_link": {
+          "visible": false
+        },
+        "frame:right_hand/fy11_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy12_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy13_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy21_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy22_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy31_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy32_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy41_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy42_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy51_Link": {
+          "visible": false
+        },
+        "frame:right_hand/fy52_Link": {
           "visible": false
         }
       },
