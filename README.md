@@ -67,6 +67,8 @@ Connect the USB camera to the RZ/V2H RDK board.
 
 **Optional:** Connect the dexterous hand to the RZ/V2H RDK board if you want to control the real hand.
 
+**Note**: Before running the demo application, please make sure to set up the hardware using the provided setup script.
+For detailed instructions, refer to the corresponding dexhand package for each hand type.
 ### Run the Demo
 
 To launch the virtual hands demo:

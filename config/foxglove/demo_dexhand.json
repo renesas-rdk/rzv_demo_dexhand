@@ -378,7 +378,7 @@
         "meshUpAxis": "z_up",
         "backgroundColor": "#3d3d3d",
         "transforms": {
-          "visible": true
+          "visible": false
         }
       },
       "transforms": {

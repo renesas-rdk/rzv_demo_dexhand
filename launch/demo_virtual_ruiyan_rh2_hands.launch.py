@@ -142,7 +142,7 @@ def generate_launch_description():
     # 4.1 Hand landmark interpreter for controlling virtual hands
     # SUBSCRIBES: /hand_landmark_estimation/hand_landmarks
     # PUBLISHES: /joint_states
-    hand_config_path = os.path.join(inspire_rh56_config_pkg_dir, 'config/inspire_rh56.yaml')
+    hand_config_path = os.path.join(ruiyan_rh2_pkg_dir, 'config/hand/ruiyan2.yaml')
     hand_landmark_interpreter_node = Node(
         package='arm_hand_control',
         executable='hand_landmark_interpreter',
