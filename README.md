@@ -11,18 +11,50 @@ The RZ/V Demo DexHand package enables:
 
 ## RZ/V ROS2 Package Dependencies
 
-| Category | Package Name | Description |
-|-----------|---------------|-------------|
-| **Base Packages** | `arm_hand_control` | Core control logic for the dexterous hand. |
-|  | `foxglove_keypoint_publisher` | Publishes keypoints for visualization in Foxglove Studio. |
-|  | `rzv_demo_dexhand` | Main demo package integrating DexHand functionalities on RZ/V platform. |
-|  | `rzv_model` | Contains model definitions and configuration files for the RZ/V system. |
-|  | `rzv_pose_estimation` | Provides pose estimation capabilities on Renesas RZ/V platforms. |
-| **For Inspire RH56 DexHand Demo** | `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
-|  | `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
-| **For Ruiyan RH2 DexHand Demo** | `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
-|  | `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
-|  | `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
+### Base Packages
+| Package Name | Description |
+|---------------|-------------|
+| `arm_hand_control` | Core control logic for the dexterous hand. |
+| `foxglove_keypoint_publisher` | Publishes keypoints for visualization in Foxglove Studio. |
+| `rzv_demo_dexhand` | Main demo package integrating DexHand functionalities on RZ/V platform. |
+
+### Model Zoo
+
+#### Base Models
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_model` | AI model abstractions and implementations for RZ/V MPU platforms. |
+| `rzv_model_utils_ros2` | Collection of helper functions for integrating AI models into ROS 2 applications. |
+
+#### Hand Models
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_yolox` | YOLOX object detection models optimized for RZ/V processors with DRP-AI acceleration. |
+
+#### Landmark Models
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_mediapipe` | MediaPipe-based pose detection models optimized for RZ/V with DRP-AI support. |
+| `rzv_rtmpose` | RTMPose-based pose detection models optimized for RZ/V with DRP-AI support. |
+| `rzv_hrnetv2` | HRNetV2-based pose detection models optimized for RZ/V with DRP-AI support. |
+
+#### Application
+| Package Name | Description |
+|---------------|-------------|
+| `rzv_pose_estimation` | Pose estimation capabilities for RZ/V platforms. |
+
+### Inspire RH56 DexHand Demo
+| Package Name | Description |
+|---------------|-------------|
+| `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
+| `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
+
+### Ruiyan RH2 DexHand Demo
+| Package Name | Description |
+|---------------|-------------|
+| `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
+| `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
+| `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
 
 ## Prerequisites
 ### Hardware Requirements:
