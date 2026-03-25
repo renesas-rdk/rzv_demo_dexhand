@@ -43,18 +43,20 @@ The RZ/V Demo DexHand package enables:
 |---------------|-------------|
 | `rzv_pose_estimation` | Pose estimation capabilities for RZ/V platforms. |
 
-### Inspire RH56 DexHand Demo
+### Inspire RH56 Hand Packages
+
 | Package Name | Description |
-|---------------|-------------|
-| `inspire_rh56_urdf` | URDF models for the Inspire RH56 dexterous hand. |
-| `inspire_rh56_dexhand` | Application and control logic for the Inspire RH56 hand. |
+|--------------|-------------|
+| `inspire_rh56_hand_description` | URDF and mesh models for the Inspire RH56 dexterous hand. |
+| `inspire_rh56_hand_ros2_control` | ros2_control configuration and hardware interface for the Inspire RH56 hand. |
+| `inspire_rh56_hand_bringup` | Launch files to start the Inspire RH56 hand system, including controllers and visualization. |
 
 ### Ruiyan RH2 DexHand Demo
 | Package Name | Description |
-|---------------|-------------|
-| `ruiyan_rh2_controller` | Control package for the Ruiyan RH2 dexterous hand. |
-| `ruiyan_rh2_urdf` | URDF models for the Ruiyan RH2 hand. |
-| `ruiyan_rh2_dexhand` | Control node for the Ruiyan RH2 hand. |
+|--------------|-------------|
+| `ruiyan_rh2_hand_description` | URDF and mesh models for the Ruiyan RH2 dexterous hand. |
+| `ruiyan_rh2_hand_ros2_control` | ros2_control configuration and hardware interface for the Ruiyan RH2 hand. |
+| `ruiyan_rh2_hand_bringup` | Launch files to start the Ruiyan RH2 hand system, including controllers and visualization. |
 
 ## Prerequisites
 ### Hardware Requirements:
@@ -100,29 +102,29 @@ Connect the USB camera to the RZ/V2H RDK board.
 **Optional:** Connect the dexterous hand to the RZ/V2H RDK board if you want to control the real hand.
 
 **Note**: Before running the demo application, please make sure to set up the hardware using the provided setup script.
-For detailed instructions, refer to the corresponding dexhand package for each hand type.
+For detailed instructions, refer to the corresponding hand_bringup package for each hand type.
 ### Run the Demo
 
 To launch the virtual hands demo:
 
 ```bash
 # For Inspire RH56 hand
-ros2 launch rzv_demo_dexhand demo_virtual_inspire_rh56_hands.launch.py
+ros2 launch rzv_demo_dexhand demo_inspire_rh56_hand.launch.py use_mock_hardware:=true
 
 # For Ruiyan RH2 hand
-ros2 launch rzv_demo_dexhand demo_virtual_ruiyan_rh2_hands.launch.py
+ros2 launch rzv_demo_dexhand demo_ruiyan_rh2_hand.launch.py use_mock_hardware:=true
 ```
 
 To launch the physical Inspire RH56 hand control demo:
 
 ```bash
-ros2 launch rzv_demo_dexhand demo_physical_inspire_rh56_hand.launch.py video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+ros2 launch rzv_demo_dexhand demo_inspire_rh56_hand.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
 ```
 
 To launch the physical RuiYan RH2 hand control demo:
 
 ```bash
-ros2 launch rzv_demo_dexhand demo_physical_ruiyan_rh2_hand.launch.py video_device:=/dev/video0 can_port:=can2
+ros2 launch rzv_demo_dexhand demo_ruiyan_rh2_hand.launch.py use_mock_hardware:=false video_device:=/dev/video0 can_port:=can2
 ```
 
 ### Demo operation
@@ -133,83 +135,68 @@ Based on your hand gesture shown in front of the camera, the dexterous hand will
 - `video_device`: Specify the camera device (default: `/dev/video0`)
 - `landmark_model_type`: Type of hand landmark model to use (default: `mediapipe_hand_landmark`, others: `rtmpose_hand`, `hrnetv2_hand_landmark`)
 - `serial_port`: Serial port for the physical Inspire RH56 DexHand (default: `/dev/ttyUSB0`, only for `demo_physical_hand.launch.py`)
-- `can_port`: Can port for the physical RuiYan RH2 DexHand (default: `can2`, only for `demo_physical_ruiyan_rh2_hand.launch.py`)
-
+- `can_port`: Can port for the physical RuiYan RH2 DexHand (default: `can2`, only for `demo_ruiyan_rh2_hand.launch.py`)
+- `use_mock_hardware`: Set to "true" for simulation/testing without physical hardware
 
 ## Launch Files
-
-#### demo_virtual_inspire_rh56_hands.launch.py and demo_virtual_ruiyan_rh2_hands.launch.py
-
-This launch file sets up a camera-based hand tracking system that controls virtual Inspire RH56 hands or Ruiyan RH2 hands:
-
-```
-PIPELINE:
-camera → hand landmark estimation → hand landmark/gesture interpreters → urdf visualization
-
-TOPIC FLOW:
-- Camera publishes: /image_raw
-- Hand landmark estimation subscribes to: /image_raw and publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
-- Visualization nodes subscribe to landmarks/bbox and publish visualizations
-- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks and publish: /joint_states
-- URDF publishers use joint states to visualize the hands
-```
-
-Components included in this launch file:
-1. **Camera Node**: Captures video input for hand tracking
-2. **Hand Landmark Estimation**: Detects hands and extracts landmark points
-3. **Visualization Nodes**: Create visual representations for Foxglove Studio
-4. **Hand Landmark Interpreter**: Converts detected landmarks to joint states
-5. **Hand Gesture Interpreter**: Alternative control method using gesture recognition
-6. **URDF State Publishers**: Visualize both right and left hands
-7. **Foxglove Bridge**: Enables visualization through Foxglove Studio
-
-#### demo_physical_inspire_rh56_hand.launch.py
-
+ 
+### demo_inspire_rh56_hand.launch.py
+ 
 This launch file extends the virtual hand demo to also control a physical Inspire RH56 dexterous hand:
-
+ 
 ```
 PIPELINE:
-camera → hand landmark estimation → hand landmark/gesture interpreters → urdf visualization + real hand control
-
+camera → hand landmark estimation → hand landmark/gesture interpreters
+  → ros2_control position controller → joint_state_broadcaster → urdf visualization + real hand control
+ 
 TOPIC FLOW:
 - Camera publishes: /image_raw
-- Hand landmark estimation subscribes to: /image_raw and publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
-- Visualization nodes subscribe to landmarks/bbox and publish visualizations
-- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks and publish: /joint_states
-- URDF publishers use joint states to visualize the hands
-- Physical hand controller uses joint states to control the real DexHand
+- Hand landmark estimation subscribes to: /image_raw
+  publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
+- Visualization nodes subscribe to landmarks/bbox and publish: /bbox_visualization, /landmarks_visualization
+- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks
+  publish: /inspire_rh56_hand_joint_position_controller/commands
+- ros2_control position controller subscribes to: /inspire_rh56_hand_joint_position_controller/commands
+- joint_state_broadcaster publishes: /joint_states
+- URDF publishers subscribe to: /joint_states for hand visualization
 ```
-
+ 
 Components included in this launch file:
-1. **Camera Node**: Captures video input for hand tracking
-2. **Hand Landmark Estimation**: Detects hands and extracts landmark points
-3. **Visualization Nodes**: Create visual representations for Foxglove Studio
-4. **Hand Landmark Interpreter**: Converts detected landmarks to joint states
-5. **Hand Gesture Interpreter**: Alternative control method using gesture recognition
-6. **URDF State Publishers**: Visualize both right and left hands
-7. **Real Hand Control**: Controls physical Inspire RH56 DexHand via serial connection
-8. **Foxglove Bridge**: Enables visualization through Foxglove Studio
-
-#### demo_physical_ruiyan_rh2_hand.launch.py
-
+1. **Robot Bringup** (`inspire_rh56_hand_bringup`): Initializes ros2_control with the Inspire RH56 joint position controller and joint state broadcaster; connects to the physical hand via serial port
+2. **Camera Node**: Captures video input for hand tracking via V4L2
+3. **Hand Landmark Estimation**: Detects hands and extracts landmark points from the camera feed
+4. **Visualization Nodes**: Create bounding box and landmark visual representations for Foxglove Studio
+5. **Hand Gesture Interpreter**: Controls the hand using discrete gesture recognition
+6. **Hand Landmark Interpreter**: Alternative control method mapping continuous landmark positions directly to joint commands
+ 
+### demo_ruiyan_rh2_hand.launch.py
+ 
 This launch file extends the virtual hand demo to also control a physical RuiYan RH2 dexterous hand:
-
-Pipeline:
-camera → hand landmark estimation → hand landmark/gesture interpreters → urdf visualization + real hand control
-
-Topic flow:
-- Camera: publishes /image_raw
-- Hand landmark estimation: subscribes to /image_raw
-    publishes /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
-- Visualization: subscribes to landmarks/bbox and publishes visualization markers
-- Hand landmark interpreter: subscribes to /hand_landmark_estimation/hand_landmarks
-    publishes /joint_states
-- Hand gesture interpreter: subscribes to /hand_landmark_estimation/hand_landmarks
-    publishes /joint_states (alternative control method)
-- URDF publishers: subscribe to /joint_states for hand visualization
-- Ruiyan RH2 DexHand: Perform message conversion: subscribes to /joint_states, publishes /ryhand6_cmd
-- Physical hand controller: subscribes to /ryhand6_cmd to control the real DexHand
-
+ 
+```
+PIPELINE:
+camera → hand landmark estimation → hand landmark/gesture interpreters
+  → ros2_control position controller → joint_state_broadcaster → urdf visualization + real hand control
+ 
+TOPIC FLOW:
+- Camera publishes: /image_raw
+- Hand landmark estimation subscribes to: /image_raw
+  publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
+- Visualization nodes subscribe to landmarks/bbox and publish: /bbox_visualization, /landmarks_visualization
+- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks
+  publish: /ruiyan_rh2_hand_joint_position_controller/commands
+- ros2_control position controller subscribes to: /ruiyan_rh2_hand_joint_position_controller/commands
+- joint_state_broadcaster publishes: /joint_states
+- URDF publishers subscribe to: /joint_states for hand visualization
+```
+ 
+Components included in this launch file:
+1. **Robot Bringup** (`ruiyan_rh2_hand_bringup`): Initializes ros2_control with the RuiYan RH2 joint position controller and joint state broadcaster; connects to the physical hand via CAN interface
+2. **Camera Node**: Captures video input for hand tracking via V4L2
+3. **Hand Landmark Estimation**: Detects hands and extracts landmark points from the camera feed
+4. **Visualization Nodes**: Create bounding box and landmark visual representations for Foxglove Studio
+5. **Hand Gesture Interpreter**: Controls the hand using discrete gesture recognition
+6. **Hand Landmark Interpreter**: Alternative control method mapping continuous landmark positions directly to joint commands
 
 ## Visualization with Foxglove Studio
 
