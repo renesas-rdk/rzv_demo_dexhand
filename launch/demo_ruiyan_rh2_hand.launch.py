@@ -196,7 +196,8 @@ def launch_setup(context, *args, **kwargs):
                 "config_file": hand_config_path,
                 "auto_demo_enabled": True,
                 "gesture_duration": 2.0,
-                "transition_duration": 0.5,
+                "transition_duration": 1.5,
+                "hand_speed": float(hand_speed_value),
             }
         ],
         remappings=[
