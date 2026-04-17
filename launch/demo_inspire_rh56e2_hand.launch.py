@@ -198,7 +198,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[
             {
                 "config_file": hand_config_path,
-                "auto_demo_enabled": True,
+                "auto_demo_enabled": False,
                 "gesture_duration": 2.0,
                 "transition_duration": 0.5,
             }
