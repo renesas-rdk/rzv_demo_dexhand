@@ -45,11 +45,11 @@ def launch_setup(context, *args, **kwargs):
     # Create LaunchConfiguration objects for customizable parameters
     use_mock_hardware_value = LaunchConfiguration("use_mock_hardware").perform(context)
     hand_side_value = LaunchConfiguration("hand_side").perform(context)
-    serial_port_value = LaunchConfiguration("serial_port")
+    can_interface_value = LaunchConfiguration("can_interface").perform(context)
 
     # Define package directories
     rzv_demo_dexhand_dir = get_package_share_directory("rzv_demo_dexhand")
-    hand_config_path = os.path.join(rzv_demo_dexhand_dir, "config/ruiyan_rh2.yaml")
+    hand_config_path = os.path.join(rzv_demo_dexhand_dir, "config/hand/ruiyan_rh2.yaml")
 
     # Accumulate all nodes/nodes to return
     nodes = []
@@ -71,7 +71,7 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             "hand_side": hand_side_value,
             "use_mock_hardware": use_mock_hardware_value,
-            "serial_port": serial_port_value,
+            "can_interface": can_interface_value,
         }.items(),
     )
     nodes.append(robot_bringup_launch)
@@ -108,9 +108,9 @@ def generate_launch_description():
     return LaunchDescription(
         [
             DeclareLaunchArgument(
-                "serial_port",
-                default_value="/dev/ttyUSB0",
-                description="Serial port for the physical DexHand",
+                "can_interface",
+                default_value="can2",
+                description="CAN interface for hand hardware communication (e.g., can0, can1, can2)",
             ),
             DeclareLaunchArgument(
                 "use_mock_hardware",
