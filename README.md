@@ -51,6 +51,14 @@ The RZ/V Demo DexHand package enables:
 | `inspire_rh56_hand_ros2_control` | ros2_control configuration and hardware interface for the Inspire RH56 hand. |
 | `inspire_rh56_hand_bringup` | Launch files to start the Inspire RH56 hand system, including controllers and visualization. |
 
+### Inspire RH56E2 Hand Packages
+
+| Package Name | Description |
+|--------------|-------------|
+| `inspire_rh56e2_hand_description` | URDF and mesh models for the Inspire RH56E2 dexterous hand. |
+| `inspire_rh56e2_hand_ros2_control` | ros2_control configuration and hardware interface for the Inspire RH56E2 hand. |
+| `inspire_rh56e2_hand_bringup` | Launch files to start the Inspire RH56E2 hand system, including controllers and visualization. |
+
 ### Ruiyan RH2 DexHand Demo
 | Package Name | Description |
 |--------------|-------------|
@@ -62,6 +70,7 @@ The RZ/V Demo DexHand package enables:
 ### Hardware Requirements:
 - USB camera for hand tracking
 - Optional: Inspire RH56 DexHand (for physical hand demo)
+- Optional: Inspire RH56E2 DexHand (for physical hand demo)
 - Optional: RuiYan RH2 DexHand (for physical hand demo)
 
 ## Quick Setup Guide
@@ -111,6 +120,9 @@ To launch the virtual hands demo:
 # For Inspire RH56 hand
 ros2 launch rzv_demo_dexhand demo_inspire_rh56_hand.launch.py use_mock_hardware:=true
 
+# For Inspire RH56E2 hand
+ros2 launch rzv_demo_dexhand demo_inspire_rh56e2_hand.launch.py use_mock_hardware:=true
+
 # For Ruiyan RH2 hand
 ros2 launch rzv_demo_dexhand demo_ruiyan_rh2_hand.launch.py use_mock_hardware:=true
 ```
@@ -119,6 +131,12 @@ To launch the physical Inspire RH56 hand control demo:
 
 ```bash
 ros2 launch rzv_demo_dexhand demo_inspire_rh56_hand.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
+```
+
+To launch the physical Inspire RH56E2 hand control demo:
+
+```bash
+ros2 launch rzv_demo_dexhand demo_inspire_rh56e2_hand.launch.py use_mock_hardware:=false video_device:=/dev/video0 serial_port:=/dev/ttyUSB0
 ```
 
 To launch the physical RuiYan RH2 hand control demo:
@@ -171,6 +189,35 @@ Components included in this launch file:
 5. **Hand Gesture Interpreter**: Controls the hand using discrete gesture recognition
 6. **Hand Landmark Interpreter**: Alternative control method mapping continuous landmark positions directly to joint commands
  
+### demo_inspire_rh56e2_hand.launch.py
+ 
+This launch file extends the virtual hand demo to also control a physical Inspire RH56E2 dexterous hand:
+ 
+```
+PIPELINE:
+camera → hand landmark estimation → hand landmark/gesture interpreters
+  → ros2_control position controller → joint_state_broadcaster → urdf visualization + real hand control
+ 
+TOPIC FLOW:
+- Camera publishes: /image_raw
+- Hand landmark estimation subscribes to: /image_raw
+  publishes: /hand_landmark_estimation/bounding_box, /hand_landmark_estimation/hand_landmarks
+- Visualization nodes subscribe to landmarks/bbox and publish: /bbox_visualization, /landmarks_visualization
+- Hand interpreters subscribe to: /hand_landmark_estimation/hand_landmarks
+  publish: /inspire_rh56e2_hand_joint_position_controller/commands
+- ros2_control position controller subscribes to: /inspire_rh56e2_hand_joint_position_controller/commands
+- joint_state_broadcaster publishes: /joint_states
+- URDF publishers subscribe to: /joint_states for hand visualization
+```
+ 
+Components included in this launch file:
+1. **Robot Bringup** (`inspire_rh56e2_hand_bringup`): Initializes ros2_control with the Inspire RH56E2 joint position controller and joint state broadcaster; connects to the physical hand via serial port
+2. **Camera Node**: Captures video input for hand tracking via V4L2
+3. **Hand Landmark Estimation**: Detects hands and extracts landmark points from the camera feed
+4. **Visualization Nodes**: Create bounding box and landmark visual representations for Foxglove Studio
+5. **Hand Gesture Interpreter**: Controls the hand using discrete gesture recognition
+6. **Hand Landmark Interpreter**: Alternative control method mapping continuous landmark positions directly to joint commands
+
 ### demo_ruiyan_rh2_hand.launch.py
  
 This launch file extends the virtual hand demo to also control a physical RuiYan RH2 dexterous hand:
