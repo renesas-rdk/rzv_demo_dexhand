@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rzv_demo_dexhand</name>
-  <version>0.1.0</version>
+  <version>1.1.0</version>
   <description>Collection of launch files for RZ/V platform dexterous hand demo</description>
   <maintainer email="baoan.du.xj@renesas.com">Baoan Du</maintainer>
   <license>Apache License 2.0</license>
